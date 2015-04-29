@@ -4,7 +4,7 @@
   <title><![CDATA[Category: huerto | José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/blog/categories/huerto/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-04-29T19:50:43+02:00</updated>
+  <updated>2015-04-30T00:08:10+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -26,7 +26,7 @@ manera me propuse monitorizar mi mini huerto con Arduino.</p>
 <p>El proyecto se compone de dos partes:</p>
 
 <ul>
-<li><p>Modulo autosuficiente de medición encargado de tomar los datos del huerto y
+<li><p>Modulo auto suficiente de medición encargado de tomar los datos del huerto y
 que los envié al modulo receptor.</p></li>
 <li><p>Modulo receptor de datos que se encarga de almacenar los datos y tratarlos.</p></li>
 </ul>
@@ -58,12 +58,16 @@ plantas, macetas&hellip; para transmitir los datos al receptor.</p>
 
 <h2>Modulo receptor</h2>
 
+<p>Recibe las lecturas de cada transmisor y los almacena en una micro SD, en el
+futuro usará una conexión ethernet para almacenar los datos en algún servidor.</p>
+
 <h3>Componentes</h3>
 
 <ul>
 <li>Arduino Uno</li>
 <li><a href="http://www.amazon.es/gp/product/B00CWX6UXY/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00CWX6UXY&linkCode=as2&tag=josegr-21">Reloj, modulo I2C DS1307</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00CWX6UXY" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
 <li><a href="http://www.amazon.es/gp/product/B00Q6WKUOM/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00Q6WKUOM&linkCode=as2&tag=josegr-21">Transmisor RF 433Mhz</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00Q6WKUOM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+<li><a href="http://www.dx.com/es/p/spi-microsd-card-adapter-v0-9b-for-arduino-works-with-official-arduino-board-246784?Utm_rid=98434108&amp;Utm_source=affiliate#.VUFV2Nqqqko">Adaptador micro SD</a></li>
 </ul>
 
 ]]></content>
