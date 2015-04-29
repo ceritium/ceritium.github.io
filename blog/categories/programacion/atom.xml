@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: programación | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/programacion/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2015-04-29T19:50:43+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ofuscar bases de datos]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/"/>
+    <updated>2015-03-28T01:35:26+01:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos</id>
+    <content type="html"><![CDATA[<p>Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
+cuando necesitas una replica de la base de datos de producción para poder hacer
+<em>debuggin</em> cómodamente en el entorno de desarrollo muchas veces lo mas eficiente es tener una COPIA de la base de datos, eso si ofuscada.</p>
+
+<p>Para ello estuvimos probando durante un tiempo con un sencillo sistema basado en
+expresiones regulares, pero finalmente nos hemos decantado por
+<a href="https://github.com/mavenlink/my_obfuscate">my_obfuscate</a>.</p>
+
+<p>Entre esto y builds parametrizados de Jenkins podemos descargarnos toda la base
+de datos, solo ciertas tablas o datos específicos de alguna relación pero por
+supuesto ofuscada.</p>
+]]></content>
+  </entry>
+  
+</feed>

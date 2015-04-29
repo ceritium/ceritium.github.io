@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2015-04-29T19:50:43+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Swagger Docs, Swagger UI y tests de integración]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/"/>
+    <updated>2015-03-29T20:52:36+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion</id>
+    <content type="html"><![CDATA[<p>En <a href="https://apidemic.co">Apidemic</a> estoy usando <a href="https://github.com/richhollis/swagger-docs">Swagger Docs</a> para generar la documentación swagger de la <em>API</em> interna y Swagger UI para visualizarla.</p>
+
+<p>La vista por defecto de Swagger UI la he personalizado un poco para añadirle un
+campo para la <em>API key</em>, pero si estás logado esta no es necesaria.</p>
+
+<p>Todas estas características quería cubrirlas con <em>tests</em> de integración, pero
+tenía el problema de que los <em>swagger docs</em> se generan con una tarea <em>rake</em> y alguno parámetros como el <code>base_path</code> cambiaban en cada entorno. Además en los tests de integración el puerto cambia cada vez.</p>
+
+<p>Así prepare los tests:</p>
+
+<pre><code class="ruby config/initializers/swagger_docs.rb">class Swagger::Docs::Config
+  def self.transform_path(path, api_version)
+    "#{Rails.application.config.host}/docs/#{path}"
+  end
+end
+
+Swagger::Docs::Config.register_apis({
+  "1.0" =&gt; {
+    :api_extension_type =&gt; :json,
+    :base_path =&gt; Rails.application.config.host,
+# continue...
+</code></pre>
+
+<pre><code class="ruby">test 'foo' do
+  visit(root_path)
+  uri = URI(current_url)
+  base_path = "http://#{uri.host}:#{uri.port}"
+
+  Rails.application.config.stubs(:host).returns(base_path)
+  Swagger::Docs::Config.registered_apis["1.0"][:base_path] = base_path
+  Rake::Task["swagger:docs"].invoke
+  # continue...
+end
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ofuscar bases de datos]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/"/>
+    <updated>2015-03-28T01:35:26+01:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos</id>
+    <content type="html"><![CDATA[<p>Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
+cuando necesitas una replica de la base de datos de producción para poder hacer
+<em>debuggin</em> cómodamente en el entorno de desarrollo muchas veces lo mas eficiente es tener una COPIA de la base de datos, eso si ofuscada.</p>
+
+<p>Para ello estuvimos probando durante un tiempo con un sencillo sistema basado en
+expresiones regulares, pero finalmente nos hemos decantado por
+<a href="https://github.com/mavenlink/my_obfuscate">my_obfuscate</a>.</p>
+
+<p>Entre esto y builds parametrizados de Jenkins podemos descargarnos toda la base
+de datos, solo ciertas tablas o datos específicos de alguna relación pero por
+supuesto ofuscada.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[fast_bundler]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/28/fast-bundler/"/>
+    <updated>2015-03-28T01:08:08+01:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/28/fast-bundler</id>
+    <content type="html"><![CDATA[<p>Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
+consecuencias es que tenemos mas de 100 gemas en nuestro Gemfile.</p>
+
+<p>Si tienes 100 gemas o menos <strong>Bundler</strong> consulta la API de Rubygems para
+calcular las dependencias pero si tienes mas se descarga todo el indice, el cual
+es bastante pesado y dependiendo de tu conexión a Internet puede ser muy lento.</p>
+
+<p>Para el día a día quizás no sea un gran beneficio, pero cuando estás
+actualizando las versión de Rails de un proyecto antiguo se agradece mucho.</p>
+
+<p>Comentándolo con compañeros de trabajo pensamos que sería buena idea probar si
+nos podíamos saltar ese límite y acabamos haciendo
+<a href="https://github.com/ceritium/fast_bundler">fast_bundler</a>.</p>
+
+<p><strong>fast_bundler</strong> actua como un proxy que envía todos los comandos a <strong>bundler</strong>
+pero redefine las constante <code>API_REQUEST_LIMIT</code>.</p>
+
+<p>La gema es totalmente experimental y no se que efectos puede tener en Rubygems
+pero hasta ahora no sabemos que haya problemas, de cualquier modo el limite lo
+podrían poner a nivel de API si lo considerasen oportuno.</p>
+
+<p>Aunque yo empecé la gema casi todo el trabajo lo ha hecho <a href="https://github.com/mikz">Michal Cichra</a>.</p>
+
+<p>Para usarlo tan sencillo como <strong>bundler</strong>.</p>
+
+<pre><code>$ gem install fast_bundler
+
+$ fast_bundle
+$ fast_bundle outdate
+$ fast_bundle update rails
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

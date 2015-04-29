@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: swagger | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/swagger/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2015-04-29T19:50:43+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Swagger Docs, Swagger UI y tests de integración]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/"/>
+    <updated>2015-03-29T20:52:36+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion</id>
+    <content type="html"><![CDATA[<p>En <a href="https://apidemic.co">Apidemic</a> estoy usando <a href="https://github.com/richhollis/swagger-docs">Swagger Docs</a> para generar la documentación swagger de la <em>API</em> interna y Swagger UI para visualizarla.</p>
+
+<p>La vista por defecto de Swagger UI la he personalizado un poco para añadirle un
+campo para la <em>API key</em>, pero si estás logado esta no es necesaria.</p>
+
+<p>Todas estas características quería cubrirlas con <em>tests</em> de integración, pero
+tenía el problema de que los <em>swagger docs</em> se generan con una tarea <em>rake</em> y alguno parámetros como el <code>base_path</code> cambiaban en cada entorno. Además en los tests de integración el puerto cambia cada vez.</p>
+
+<p>Así prepare los tests:</p>
+
+<pre><code class="ruby config/initializers/swagger_docs.rb">class Swagger::Docs::Config
+  def self.transform_path(path, api_version)
+    "#{Rails.application.config.host}/docs/#{path}"
+  end
+end
+
+Swagger::Docs::Config.register_apis({
+  "1.0" =&gt; {
+    :api_extension_type =&gt; :json,
+    :base_path =&gt; Rails.application.config.host,
+# continue...
+</code></pre>
+
+<pre><code class="ruby">test 'foo' do
+  visit(root_path)
+  uri = URI(current_url)
+  base_path = "http://#{uri.host}:#{uri.port}"
+
+  Rails.application.config.stubs(:host).returns(base_path)
+  Swagger::Docs::Config.registered_apis["1.0"][:base_path] = base_path
+  Rake::Task["swagger:docs"].invoke
+  # continue...
+end
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

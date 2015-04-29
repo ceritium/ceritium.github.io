@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: docker | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/docker/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2015-04-29T19:50:43+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Tutum]]></title>
+    <link href="http://ceritium.github.io/blog/2015/03/28/tutum/"/>
+    <updated>2015-03-28T01:48:42+01:00</updated>
+    <id>http://ceritium.github.io/blog/2015/03/28/tutum</id>
+    <content type="html"><![CDATA[<p>El otro día casi por casualidad llegué a la web de
+<a href="https://www.tutum.co/">Tutum.co</a>.</p>
+
+<p>Tutum se define como &ldquo;Docker Platform for Devs and Ops&rdquo;, yo lo veo como un
+<strong>Marathon</strong> pero mucho más sencillo y sin necesidad de tener más infraestructura
+que los servidores sobre los que quieres correr tus <em>dockers</em>.</p>
+
+<p>A golpe de click puedes lanzar nodos sobre Amazon Ec2, Digital Ocean, Azure o
+Softlayer, eliges la región, el tamaño, el numero de maquinas y las <em>taggeas</em>
+para poder decirle a los servicios que levantes que vayan a un servidor o a
+otro.</p>
+
+<p>Lo mejor de todo es la API, gracias a la cual se me ha ocurrido montar un pequeño
+sistema de integración continua <em>as a service</em>, ya se que hay muchos, pero es un
+reto interesante.</p>
+
+<p>Mientras sigan en beta será totalmente gratuito y los que se registren mientras
+tanto tendrán una cuenta gratuita para siempre.</p>
+
+<p>Si no sabes que es Docker o Marathon puedes seguir estos enlaces:</p>
+
+<ul>
+<li><a href="https://mesosphere.github.io/marathon/">Marathon</a></li>
+<li><a href="https://www.docker.com/">Docker</a></li>
+</ul>
+
+
+<p>De todas formas dentro de Tutum puedes encontrar <a href="https://support.tutum.co/support/solutions/5000042949">mucha</a> <a href="https://learn.tutum.co/">documentación</a> sobre Tutum o sobre Docker en general. Mi recomendación además de que pruebes Docker es que trates de seguir algún tutorial sencillo del servicio.</p>
+]]></content>
+  </entry>
+  
+</feed>
