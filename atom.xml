@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-05-28T01:23:01+02:00</updated>
+  <updated>2015-05-28T17:15:17+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,254 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Arduino modulo RF 433Mhz]]></title>
+    <link href="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/"/>
+    <updated>2015-05-28T01:28:42+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz</id>
+    <content type="html"><![CDATA[<p>Para el proyecto de <a href="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/">monitorización de mi pequeño huerto
+urbano</a> necesito
+comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos distintas
+opciones y dependiendo de las necesidades podremos usar un sistema u otro.</p>
+
+<p>En mi caso, solo necesito enviar unos pocos datos a pocos metros, lo que viene
+siendo desde mi balcón donde tengo un módulo hasta el router donde tengo el otro
+conectado a Internet.</p>
+
+<p>Para ello he usado un transmisor y un receptor de <strong>RF a 433Mhz</strong>. Lo más
+interesante de estos módulos es su bajo coste y lo podemos encontrar fácilmente
+en <a href="http://www.amazon.es/gp/product/B00Q6WKUOM/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00Q6WKUOM&linkCode=as2&tag=josegr-21">Amazon</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00Q6WKUOM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+ o <a href="http://www.dx.com/es/p/433mhz-rf-transmitter-receiver-link-kit-green-221225?Utm_rid=98434108&amp;Utm_source=affiliate#.VUFV2Nqqqko">DX.com</a> por menos de 5 euros.</p>
+
+<p>Para usar estos módulos podemos usar la librería
+<a href="https://github.com/kevinprince/VirtualWire">VirtualWire</a> la cual nos hará el
+proceso mucho más sencillo.</p>
+
+<p>Modulo emisor:</p>
+
+<p><img src="http://ceritium.github.io/images/rf-433-emiter.jpg" title="RF 433 emiter" ></p>
+
+<p>Conexiones:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>Arduino     | Emisor
+</span><span class='line'>----------- | ---------------
+</span><span class='line'>5V          | VCC
+</span><span class='line'>GND         | GND
+</span><span class='line'>Digital 12  | DATA
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cp">#include &lt;VirtualWire.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Para el led</span>
+</span><span class='line'>  <span class="n">pinMode</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="n">OUTPUT</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Pin de escritura</span>
+</span><span class='line'>  <span class="n">vw_set_tx_pin</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Velocidad de transferencia en Kbps</span>
+</span><span class='line'>  <span class="c1">// debe ser la misma en el receptor</span>
+</span><span class='line'>  <span class="n">vw_setup</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">loop</span><span class="p">(){</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Un mensaje cualquiera, podríamos preparar una cadena</span>
+</span><span class='line'>  <span class="c1">// concatenando distintos valores de sensores.</span>
+</span><span class='line'>  <span class="n">String</span> <span class="n">message</span> <span class="o">=</span>  <span class="s">&quot;hello world!&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Convertimos el string a un array char.</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="n">message</span><span class="p">.</span><span class="n">length</span><span class="p">()];</span>
+</span><span class='line'>  <span class="n">message</span><span class="p">.</span><span class="n">toCharArray</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Iluminamos el led para indicar que estamos transmitiendo</span>
+</span><span class='line'>  <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Enviamos el mensaje</span>
+</span><span class='line'>  <span class="n">vw_send</span><span class="p">((</span><span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span><span class="n">buf</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+</span><span class='line'>  <span class="c1">// Se mantiene en espera hasta que todo el mensaje se ha enviado</span>
+</span><span class='line'>  <span class="n">vw_wait_tx</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Apagamos el led</span>
+</span><span class='line'>  <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Simplemente esperamos un segundo</span>
+</span><span class='line'>  <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Modulo receptor:</p>
+
+<p><img src="http://ceritium.github.io/images/rf-433-receiver.jpg" title="RF 433 receiver" ></p>
+
+<p>Conexiones:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>Arduino     | Receptor
+</span><span class='line'>----------- | -----------------------------------------
+</span><span class='line'>5V          | VCC
+</span><span class='line'>GND         | GND
+</span><span class='line'>Digital 11  | DATA # Uno de los dos disponibles
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='C'><span class='line'><span class="cp">#include &lt;VirtualWire.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Para el led</span>
+</span><span class='line'>  <span class="n">pinMode</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Pin de lectura</span>
+</span><span class='line'>  <span class="n">vw_set_rx_pin</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Velocidad de transferencia en Kbps</span>
+</span><span class='line'>  <span class="c1">// debe ser la misma en el transmisor</span>
+</span><span class='line'>  <span class="n">vw_setup</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Ponemos en escucha</span>
+</span><span class='line'>  <span class="n">vw_rx_start</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">// Inizializamos el buffer con las constantes definidas en VirtualWire</span>
+</span><span class='line'>  <span class="kt">uint8_t</span> <span class="n">buf</span><span class="p">[</span><span class="n">VW_MAX_MESSAGE_LEN</span><span class="p">];</span>
+</span><span class='line'>  <span class="kt">uint8_t</span> <span class="n">buflen</span> <span class="o">=</span> <span class="n">VW_MAX_MESSAGE_LEN</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">vw_get_message</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buflen</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Iluminamos el led para indicar que hay una transmisión entrante</span>
+</span><span class='line'>    <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Leemos el buffer y lo volcamos en la variable data</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">buflen</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">data</span> <span class="o">+=</span> <span class="n">String</span><span class="p">(</span><span class="kt">char</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Lo imprimimos por el puerto serie</span>
+</span><span class='line'>    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Y apagamos el led</span>
+</span><span class='line'>   <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Con todo enchufado y el código cargado en ambos módulos podremos ver los leds
+parpadeando y por el puerto serie del receptor los mensajes que manda el emisor.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Monitorizar huerto urbano con Arduino]]></title>
