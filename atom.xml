@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-05-28T17:15:17+02:00</updated>
+  <updated>2015-05-29T23:06:12+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Instalar QT4 en Ubuntu 14.04]]></title>
+    <link href="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/"/>
+    <updated>2015-05-29T22:40:16+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04</id>
+    <content type="html"><![CDATA[<p>Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas
+antiguas, como por ejemplo <code>capybara-webkit 0.12.1</code>. En algún momento habrá que
+actualizarlo&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install -y build-essential
+</span><span class='line'>$ sudo apt-get build-dep qt4-qmake
+</span><span class='line'>
+</span><span class='line'>$ wget http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ cd qt-everywhere-opensource-src-4.8.6
+</span><span class='line'>
+</span><span class='line'># En el configure nos pedirá elegir entre la version open source o privada,
+</span><span class='line'># yo elegí la open source.
+</span><span class='line'>$ ./configure
+</span><span class='line'>
+</span><span class='line'># Esto llevará un buen rato
+</span><span class='line'>$ make
+</span><span class='line'>
+</span><span class='line'>$ sudo make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Con esto ya tenemos QT4, pero al hacer por ejemplo <code>gem install capybara-webkit
+-v 0.12.1</code> dirá que no encuentra <code>qmake</code> para QT4.</p>
+
+<p>Yo lo que hice fue:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Guardo una copia de qmake
+</span><span class='line'>
+</span><span class='line'>$ sudo mv /usr/bin/qmake /usr/bin/qmake.old
+</span><span class='line'>$ sudo /usr/local/Trolltech/Qt-4.8.6 /usr/bin/qmake</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Y con esto ya instala sin problemas.</p>
+
+<p>Tengo pendiente para el lunes probar <code>qtchooser</code>, el cual parece mejor opción.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Arduino modulo RF 433Mhz]]></title>

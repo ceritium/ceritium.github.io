@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: linux | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2015-05-29T23:06:12+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Instalar QT4 en Ubuntu 14.04]]></title>
+    <link href="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/"/>
+    <updated>2015-05-29T22:40:16+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04</id>
+    <content type="html"><![CDATA[<p>Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas
+antiguas, como por ejemplo <code>capybara-webkit 0.12.1</code>. En algún momento habrá que
+actualizarlo&hellip;</p>
+
+<pre><code>$ sudo apt-get install -y build-essential
+$ sudo apt-get build-dep qt4-qmake
+
+$ wget http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
+$ tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz
+$ cd qt-everywhere-opensource-src-4.8.6
+
+# En el configure nos pedirá elegir entre la version open source o privada,
+# yo elegí la open source.
+$ ./configure
+
+# Esto llevará un buen rato
+$ make
+
+$ sudo make install
+</code></pre>
+
+<p>Con esto ya tenemos QT4, pero al hacer por ejemplo <code>gem install capybara-webkit
+-v 0.12.1</code> dirá que no encuentra <code>qmake</code> para QT4.</p>
+
+<p>Yo lo que hice fue:</p>
+
+<pre><code># Guardo una copia de qmake
+
+$ sudo mv /usr/bin/qmake /usr/bin/qmake.old
+$ sudo /usr/local/Trolltech/Qt-4.8.6 /usr/bin/qmake
+</code></pre>
+
+<p>Y con esto ya instala sin problemas.</p>
+
+<p>Tengo pendiente para el lunes probar <code>qtchooser</code>, el cual parece mejor opción.</p>
+]]></content>
+  </entry>
+  
+</feed>

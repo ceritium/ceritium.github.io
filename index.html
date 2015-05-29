@@ -9,9 +9,8 @@
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Para el proyecto de monitorización de mi pequeño huerto
-urbano necesito
-comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos &hellip;">
+  <meta name="description" content="Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -45,11 +44,11 @@ comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos &hellip;"
 </hgroup>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss email">
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  
+    <li><a href="mailto:ceritium@gmail.com" rel="email" title="contact via email">ceritium@gmail.com</a></li>
+  
   <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-    <li><a href="ceritium@gmail.com" rel="subscribe-email" title="subscribe via email">Email</a></li>
-  
 </ul>
   
 <form action="https://www.google.com/search" method="get">
@@ -75,6 +74,92 @@ comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos &hellip;"
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Instalar QT4 en Ubuntu 14.04</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-29T22:40:16+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:40 pm</span></time>
+        
+           | <a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas
+antiguas, como por ejemplo <code>capybara-webkit 0.12.1</code>. En algún momento habrá que
+actualizarlo&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install -y build-essential
+</span><span class='line'>$ sudo apt-get build-dep qt4-qmake
+</span><span class='line'>
+</span><span class='line'>$ wget http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ cd qt-everywhere-opensource-src-4.8.6
+</span><span class='line'>
+</span><span class='line'># En el configure nos pedirá elegir entre la version open source o privada,
+</span><span class='line'># yo elegí la open source.
+</span><span class='line'>$ ./configure
+</span><span class='line'>
+</span><span class='line'># Esto llevará un buen rato
+</span><span class='line'>$ make
+</span><span class='line'>
+</span><span class='line'>$ sudo make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Con esto ya tenemos QT4, pero al hacer por ejemplo <code>gem install capybara-webkit
+-v 0.12.1</code> dirá que no encuentra <code>qmake</code> para QT4.</p>
+
+<p>Yo lo que hice fue:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Guardo una copia de qmake
+</span><span class='line'>
+</span><span class='line'>$ sudo mv /usr/bin/qmake /usr/bin/qmake.old
+</span><span class='line'>$ sudo /usr/local/Trolltech/Qt-4.8.6 /usr/bin/qmake</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Y con esto ya instala sin problemas.</p>
+
+<p>Tengo pendiente para el lunes probar <code>qtchooser</code>, el cual parece mejor opción.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/05/28/arduino-modulo-rf-433mhz/">Arduino modulo RF 433Mhz</a></h1>
     
     
@@ -85,6 +170,9 @@ comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos &hellip;"
 
 
 <time class='entry-date' datetime='2015-05-28T01:28:42+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:28 am</span></time>
+        
+           | <a href="/blog/2015/05/28/arduino-modulo-rf-433mhz/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/">Comments</a>
         
       </p>
     
@@ -354,6 +442,9 @@ parpadeando y por el puerto serie del receptor los mensajes que manda el emisor.
 
 <time class='entry-date' datetime='2015-04-27T21:00:42+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:00 pm</span></time>
         
+           | <a href="/blog/2015/04/27/monitorizar-huerto-urbano-con-arduino/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/04/27/monitorizar-huerto-urbano-con-arduino/">Comments</a>
+        
       </p>
     
   </header>
@@ -449,6 +540,9 @@ o almacena en la SD.</p>
 
 <time class='entry-date' datetime='2015-03-29T20:52:36+02:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:52 pm</span></time>
         
+           | <a href="/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/">Comments</a>
+        
       </p>
     
   </header>
@@ -536,6 +630,9 @@ tenía el problema de que los <em>swagger docs</em> se generan con una tarea <em
 
 <time class='entry-date' datetime='2015-03-28T01:48:42+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:48 am</span></time>
         
+           | <a href="/blog/2015/03/28/tutum/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/tutum/">Comments</a>
+        
       </p>
     
   </header>
@@ -592,6 +689,9 @@ tanto tendrán una cuenta gratuita para siempre.</p>
 
 <time class='entry-date' datetime='2015-03-28T01:35:26+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 am</span></time>
         
+           | <a href="/blog/2015/03/28/ofuscar-bases-de-datos/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/">Comments</a>
+        
       </p>
     
   </header>
@@ -630,6 +730,9 @@ supuesto ofuscada.</p>
 
 
 <time class='entry-date' datetime='2015-03-28T01:08:08+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:08 am</span></time>
+        
+           | <a href="/blog/2015/03/28/fast-bundler/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/fast-bundler/">Comments</a>
         
       </p>
     
@@ -695,6 +798,9 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
 
 <time class='entry-date' datetime='2015-03-28T00:31:14+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:31 am</span></time>
         
+           | <a href="/blog/2015/03/28/apidemic/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/apidemic/">Comments</a>
+        
       </p>
     
   </header>
@@ -744,6 +850,10 @@ se creen tendrán un plan básico gratuito para siempre.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Instalar QT4 en Ubuntu 14.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/28/arduino-modulo-rf-433mhz/">Arduino modulo RF 433Mhz</a>
       </li>
     
@@ -757,10 +867,6 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <li class="post">
         <a href="/blog/2015/03/28/tutum/">Tutum</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/28/ofuscar-bases-de-datos/">Ofuscar bases de datos</a>
       </li>
     
   </ul>
@@ -811,6 +917,19 @@ se creen tendrán un plan básico gratuito para siempre.</p>
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'ceritiumblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 

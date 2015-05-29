@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>apidemic - José Galisteo Ruiz</title>
+  <title>Instalar QT4 en Ubuntu 14.04 - José Galisteo Ruiz</title>
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Durante las ultimas semanas he estado trabajando en Apidemic. Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
-los &hellip;">
+  <meta name="description" content="Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ los &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ceritium.github.io/blog/2015/03/28/apidemic/">
+  <link rel="canonical" href="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="José Galisteo Ruiz" type="application/atom+xml">
@@ -71,7 +71,7 @@ los &hellip;">
   
   <header>
     
-      <h1 class="entry-title">apidemic</h1>
+      <h1 class="entry-title">Instalar QT4 en Ubuntu 14.04</h1>
     
     
       <p class="meta">
@@ -80,7 +80,7 @@ los &hellip;">
 
 
 
-<time class='entry-date' datetime='2015-03-28T00:31:14+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:31 am</span></time>
+<time class='entry-date' datetime='2015-05-29T22:40:16+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:40 pm</span></time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://ceritium.github.io">Comments</a>
@@ -90,30 +90,61 @@ los &hellip;">
   </header>
 
 
-<div class="entry-content"><p>Durante las ultimas semanas he estado trabajando en <a href="http://apidemic.co">Apidemic</a>.</p>
+<div class="entry-content"><p>Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
+necesitar usar QT4 para trabajar con versiones de librerías o gemas
+antiguas, como por ejemplo <code>capybara-webkit 0.12.1</code>. En algún momento habrá que
+actualizarlo&hellip;</p>
 
-<p><img src="/images/apidemic-entities.png" title="Apidemic screenshot" >
-<img src="/images/apidemic-entity-edit.png" title="Apidemic screenshot" ></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install -y build-essential
+</span><span class='line'>$ sudo apt-get build-dep qt4-qmake
+</span><span class='line'>
+</span><span class='line'>$ wget http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz
+</span><span class='line'>$ cd qt-everywhere-opensource-src-4.8.6
+</span><span class='line'>
+</span><span class='line'># En el configure nos pedirá elegir entre la version open source o privada,
+</span><span class='line'># yo elegí la open source.
+</span><span class='line'>$ ./configure
+</span><span class='line'>
+</span><span class='line'># Esto llevará un buen rato
+</span><span class='line'>$ make
+</span><span class='line'>
+</span><span class='line'>$ sudo make install</span></code></pre></td></tr></table></div></figure>
 
-<p>Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
-los campos y los tipos de datos y lista para usar.</p>
 
-<p>De momento el registro está totalmente abierto y gratuito, todas las cuentas que
-se creen tendrán un plan básico gratuito para siempre.</p>
+<p>Con esto ya tenemos QT4, pero al hacer por ejemplo <code>gem install capybara-webkit
+-v 0.12.1</code> dirá que no encuentra <code>qmake</code> para QT4.</p>
 
-<p>Características:</p>
+<p>Yo lo que hice fue:</p>
 
-<ul>
-<li>Documentación swagger automática.</li>
-<li>API Rest en formato JSON.</li>
-<li>El listado permite paginación, filtro por cada campo y ordenación.</li>
-<li>Métodos para incrementar de forma atómica los campos numéricos.</li>
-<li>Gestión de keys en modo escritura o lectura.</li>
-<li>API interna.</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Guardo una copia de qmake
+</span><span class='line'>
+</span><span class='line'>$ sudo mv /usr/bin/qmake /usr/bin/qmake.old
+</span><span class='line'>$ sudo /usr/local/Trolltech/Qt-4.8.6 /usr/bin/qmake</span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="/images/apidemic-swagger.png" title="Apidemic screenshot swagger" ></p>
+<p>Y con esto ya instala sin problemas.</p>
+
+<p>Tengo pendiente para el lunes probar <code>qtchooser</code>, el cual parece mejor opción.</p>
 </div>
 
 
@@ -129,12 +160,12 @@ se creen tendrán un plan básico gratuito para siempre.</p>
 
 
 
-<time class='entry-date' datetime='2015-03-28T00:31:14+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:31 am</span></time>
+<time class='entry-date' datetime='2015-05-29T22:40:16+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:40 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/apidemic/'>apidemic</a>
+    <a class='category' href='/blog/categories/linux/'>linux</a>
   
 </span>
 
@@ -143,7 +174,7 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2015/03/28/apidemic/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2015/03/28/apidemic/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/" >Tweet</a>
   
   
   
@@ -152,8 +183,8 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2015/05/28/arduino-modulo-rf-433mhz/" title="Previous Post: Arduino modulo RF 433Mhz">&laquo; Arduino modulo RF 433Mhz</a>
       
-        <a class="basic-alignment right" href="/blog/2015/03/28/fast-bundler/" title="Next Post: fast_bundler">fast_bundler &raquo;</a>
       
     </p>
   </footer>
@@ -248,8 +279,8 @@ se creen tendrán un plan básico gratuito para siempre.</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://ceritium.github.io/blog/2015/03/28/apidemic/';
-        var disqus_url = 'http://ceritium.github.io/blog/2015/03/28/apidemic/';
+        var disqus_identifier = 'http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/';
+        var disqus_url = 'http://ceritium.github.io/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/';
         var disqus_script = 'embed.js';
       
     (function () {
