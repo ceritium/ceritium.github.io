@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: arduino, | José Galisteo Ruiz]]></title>
-  <link href="http://ceritium.github.io/blog/categories/arduino/atom.xml" rel="self"/>
+  <title><![CDATA[Category: nodemcu, | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/nodemcu/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
   <updated>2015-08-06T00:15:28+02:00</updated>
   <id>http://ceritium.github.io/</id>
