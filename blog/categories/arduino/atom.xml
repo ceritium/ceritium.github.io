@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: arduino, | José Galisteo Ruiz]]></title>
+  <title><![CDATA[Category: arduino | José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/blog/categories/arduino/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-08-06T00:15:28+02:00</updated>
+  <updated>2015-08-06T00:16:59+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -14,11 +14,221 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Arduino, Wifi, esp2866 y nodemcu]]></title>
-    <link href="http://ceritium.github.io/blog/2015/08/06/arduino-wifi-esp2866-y-nodemcu/"/>
-    <updated>2015-08-06T00:14:57+02:00</updated>
-    <id>http://ceritium.github.io/blog/2015/08/06/arduino-wifi-esp2866-y-nodemcu</id>
-    <content type="html"><![CDATA[
+    <title type="html"><![CDATA[Arduino modulo RF 433Mhz]]></title>
+    <link href="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/"/>
+    <updated>2015-05-28T01:28:42+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz</id>
+    <content type="html"><![CDATA[<p>Para el proyecto de <a href="/2015/04/27/monitorizar-huerto-urbano-con-arduino/">monitorización de mi pequeño huerto
+urbano</a> necesito
+comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos distintas
+opciones y dependiendo de las necesidades podremos usar un sistema u otro.</p>
+
+<p>En mi caso, solo necesito enviar unos pocos datos a pocos metros, lo que viene
+siendo desde mi balcón donde tengo un módulo hasta el router donde tengo el otro
+conectado a Internet.</p>
+
+<p>Para ello he usado un transmisor y un receptor de <strong>RF a 433Mhz</strong>. Lo más
+interesante de estos módulos es su bajo coste y lo podemos encontrar fácilmente
+en <a href="http://www.amazon.es/gp/product/B00Q6WKUOM/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00Q6WKUOM&linkCode=as2&tag=josegr-21">Amazon</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00Q6WKUOM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+ o <a href="http://www.dx.com/es/p/433mhz-rf-transmitter-receiver-link-kit-green-221225?Utm_rid=98434108&amp;Utm_source=affiliate#.VUFV2Nqqqko">DX.com</a> por menos de 5 euros.</p>
+
+<p>Para usar estos módulos podemos usar la librería
+<a href="https://github.com/kevinprince/VirtualWire">VirtualWire</a> la cual nos hará el
+proceso mucho más sencillo.</p>
+
+<p>Modulo emisor:</p>
+
+<p><img src="/images/rf-433-emiter.jpg" title="RF 433 emiter" ></p>
+
+<p>Conexiones:</p>
+
+<pre><code class="text">Arduino     | Emisor
+----------- | ---------------
+5V          | VCC
+GND         | GND
+Digital 12  | DATA
+</code></pre>
+
+<pre><code class="C">#include &lt;VirtualWire.h&gt;
+
+void setup() {
+
+  // Para el led
+  pinMode(13,OUTPUT);
+
+  // Pin de escritura
+  vw_set_tx_pin(12);
+
+  // Velocidad de transferencia en Kbps
+  // debe ser la misma en el receptor
+  vw_setup(2000);
+}
+
+void loop(){
+
+  // Un mensaje cualquiera, podríamos preparar una cadena
+  // concatenando distintos valores de sensores.
+  String message =  "hello world!";
+
+  // Convertimos el string a un array char.
+  char buf[message.length()];
+  message.toCharArray(buf, message.length() + 1);
+
+  // Iluminamos el led para indicar que estamos transmitiendo
+  digitalWrite(13, true);
+
+  // Enviamos el mensaje
+  vw_send((uint8_t *)buf, strlen(buf));
+  // Se mantiene en espera hasta que todo el mensaje se ha enviado
+  vw_wait_tx();
+
+  // Apagamos el led
+  digitalWrite(13, false);
+
+  // Simplemente esperamos un segundo
+  delay(1000);
+}
+</code></pre>
+
+<p>Modulo receptor:</p>
+
+<p><img src="/images/rf-433-receiver.jpg" title="RF 433 receiver" ></p>
+
+<p>Conexiones:</p>
+
+<pre><code class="text">Arduino     | Receptor
+----------- | -----------------------------------------
+5V          | VCC
+GND         | GND
+Digital 11  | DATA # Uno de los dos disponibles
+</code></pre>
+
+<pre><code class="C">#include &lt;VirtualWire.h&gt;
+
+String data;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  // Para el led
+  pinMode(13, OUTPUT);
+
+  // Pin de lectura
+  vw_set_rx_pin(8);
+
+  // Velocidad de transferencia en Kbps
+  // debe ser la misma en el transmisor
+  vw_setup(2000);
+
+  // Ponemos en escucha
+  vw_rx_start();
+}
+
+void loop()
+{
+  // Inizializamos el buffer con las constantes definidas en VirtualWire
+  uint8_t buf[VW_MAX_MESSAGE_LEN];
+  uint8_t buflen = VW_MAX_MESSAGE_LEN;
+
+  if (vw_get_message(buf, &amp;buflen)) {
+
+    // Iluminamos el led para indicar que hay una transmisión entrante
+    digitalWrite(13, true);
+
+    // Leemos el buffer y lo volcamos en la variable data
+    data = "";
+    int i;
+    for (i = 0; i &lt; buflen; i++) {
+      data += String(char(buf[i]));
+    }
+
+    // Lo imprimimos por el puerto serie
+    Serial.println(data);
+
+   // Y apagamos el led
+   digitalWrite(13, false);
+  }
+}
+</code></pre>
+
+<p>Con todo enchufado y el código cargado en ambos módulos podremos ver los leds
+parpadeando y por el puerto serie del receptor los mensajes que manda el emisor.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitorizar huerto urbano con Arduino]]></title>
+    <link href="http://ceritium.github.io/blog/2015/04/27/monitorizar-huerto-urbano-con-arduino/"/>
+    <updated>2015-04-27T21:00:42+02:00</updated>
+    <id>http://ceritium.github.io/blog/2015/04/27/monitorizar-huerto-urbano-con-arduino</id>
+    <content type="html"><![CDATA[<p>A pesar de lo pequeñito de mi balcón desde hace unos meses me decidí a sembrar
+algunas hortalizas y hierbas aromáticas en mi balcón. También desde hace unos
+meses estoy trasteando mas que nunca con Arduino y como no podía ser de otra
+manera me propuse monitorizar mi mini huerto con Arduino.</p>
+
+<p>El proyecto se compone de dos partes:</p>
+
+<ul>
+<li><p>Modulo auto suficiente de medición encargado de tomar los datos del huerto y
+que los envié al modulo receptor.</p></li>
+<li><p>Modulo receptor de datos que se encarga de almacenar los datos y tratarlos.</p></li>
+</ul>
+
+
+<p>Objetivos:</p>
+
+<p>El modulo de medición debería ser energeticamente autosuficiente, es decir,
+alimentarse por energía solar y ser capaz de enviar datos al modulo receptor.</p>
+
+<p>El modulo receptor estaría a cierta distancia y conectado a una fuente
+eléctrica.</p>
+
+<h2>Modulo de medición</h2>
+
+<p>La idea es que cada modulo pueda medir al menos la humedad de varias zonas,
+plantas, macetas&hellip; para transmitir los datos al receptor.</p>
+
+<h3>Componentes</h3>
+
+<ul>
+<li>Arduino Nano</li>
+<li>Placa <a href="http://www.seeedstudio.com/depot/LiPo-Rider-v13-p-2403.html">LipoRider</a></li>
+<li>Panel solar de <a href="http://www.seeedstudio.com/depot/05W-Solar-Panel-55x70-p-632.html">0.5W</a></li>
+<li><a href="http://www.amazon.es/gp/product/B00Q6WKUOM/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00Q6WKUOM&linkCode=as2&tag=josegr-21">Transmisor RF 433Mhz</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00Q6WKUOM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+<li><a href="http://www.amazon.es/gp/product/B00K67Z76O/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00K67Z76O&linkCode=as2&tag=josegr-21">Higrometro</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00K67Z76O" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+</ul>
+
+
+<h2>Modulo receptor</h2>
+
+<p>Recibe las lecturas de cada transmisor y los envía por HTTP a algún servicio web
+o almacena en la SD.</p>
+
+<h3>Componentes</h3>
+
+<p>Básico:</p>
+
+<ul>
+<li>Arduino Uno</li>
+<li><a href="http://www.amazon.es/gp/product/B00Q6WKUOM/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00Q6WKUOM&linkCode=as2&tag=josegr-21">Transmisor RF 433Mhz</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00Q6WKUOM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+</ul>
+
+
+<p>Opción A:</p>
+
+<ul>
+<li><a href="http://www.amazon.es/gp/product/B00CL59OJU/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00CL59OJU&linkCode=as2&tag=josegr-21">Placa Arduino con Ethernet Shield W5100</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00CL59OJU" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+</ul>
+
+
+<p>Opción B:</p>
+
+<ul>
+<li><a href="http://www.amazon.es/gp/product/B00CWX6UXY/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00CWX6UXY&linkCode=as2&tag=josegr-21">Reloj, modulo I2C DS1307</a><img src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00CWX6UXY" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></li>
+<li><a href="http://www.dx.com/es/p/spi-microsd-card-adapter-v0-9b-for-arduino-works-with-official-arduino-board-246784?Utm_rid=98434108&amp;Utm_source=affiliate#.VUFV2Nqqqko">Adaptador micro SD</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
