@@ -9,8 +9,8 @@
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Ubuntu 14.04 viene con QT5 por defecto lo cual está bien, pero a veces podemos
-necesitar usar QT4 para trabajar con versiones de librerías o gemas &hellip;">
+  <meta name="description" content="I recently upgraded to Yosemite after skip the reminder each day for the last
+year&hellip; Everything was fine, Mysql working, brew packages are OK, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,59 @@ necesitar usar QT4 para trabajar con versiones de librerías o gemas &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Postgres after upgrade to Yosemite</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-06T00:03:19+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:03 am</span></time>
+        
+           | <a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I recently upgraded to Yosemite after skip the reminder each day for the last
+year&hellip;</p>
+
+<p>Everything was fine, Mysql working, brew packages are OK, rbenv, ruby and Rails
+stuff looks fine except <strong>Postgres</strong>.</p>
+
+<p>Checking the logs I saw:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>FATAL:  could not open directory "pg_tblspc": No such file or directory</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The solution was easy:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /usr/local/var/postgres
+</span><span class='line'>mkdir pg_tblspc pg_twophase pg_stat_tmp
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>`</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -862,6 +915,10 @@ se creen tendrán un plan básico gratuito para siempre.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Postgres after upgrade to Yosemite</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Instalar QT4 en Ubuntu 14.04</a>
       </li>
     
@@ -875,10 +932,6 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <li class="post">
         <a href="/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/">Swagger Docs, Swagger UI y tests de integración</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/28/tutum/">Tutum</a>
       </li>
     
   </ul>

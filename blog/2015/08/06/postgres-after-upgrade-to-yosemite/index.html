@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: docker - José Galisteo Ruiz</title>
+  <title>Postgres after upgrade to Yosemite - José Galisteo Ruiz</title>
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Category: docker">
+  <meta name="description" content="I recently upgraded to Yosemite after skip the reminder each day for the last
+year&hellip; Everything was fine, Mysql working, brew packages are OK, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ceritium.github.io/blog/categories/docker/">
+  <link rel="canonical" href="http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="José Galisteo Ruiz" type="application/atom+xml">
@@ -78,36 +79,101 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: docker</h1>
+    
+      <h1 class="entry-title">Postgres after upgrade to Yosemite</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-06T00:03:19+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:03 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>I recently upgraded to Yosemite after skip the reminder each day for the last
+year&hellip;</p>
 
-  
-  <h2>2015</h2>
+<p>Everything was fine, Mysql working, brew packages are OK, rbenv, ruby and Rails
+stuff looks fine except <strong>Postgres</strong>.</p>
 
-<article>
-  
-<h1><a href="/blog/2015/03/28/tutum/">Tutum</a></h1>
-<time datetime="2015-03-28T01:48:42+01:00" pubdate><span class='month'>Mar</span> <span class='day'>28</span> <span class='year'>2015</span></time>
+<p>Checking the logs I saw:</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/docker/'>docker</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>FATAL:  could not open directory "pg_tblspc": No such file or directory</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>The solution was easy:</p>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /usr/local/var/postgres
+</span><span class='line'>mkdir pg_tblspc pg_twophase pg_stat_tmp
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>`</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jose Galisteo Ruiz</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-06T00:03:19+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:03 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/postgres/'>postgres,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/" title="Previous Post: Instalar QT4 en Ubuntu 14.04">&laquo; Instalar QT4 en Ubuntu 14.04</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -191,7 +257,10 @@
       var disqus_shortname = 'ceritiumblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/';
+        var disqus_url = 'http://ceritium.github.io/blog/2015/08/06/postgres-after-upgrade-to-yosemite/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
