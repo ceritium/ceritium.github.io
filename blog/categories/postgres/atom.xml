@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgres, | José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/blog/categories/postgres/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-08-06T00:11:26+02:00</updated>
+  <updated>2015-08-06T00:11:31+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -30,11 +30,10 @@ stuff looks fine except <strong>Postgres</strong>.</p>
 </code></pre>
 
 <p>The solution was easy:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /usr/local/var/postgres
-</span><span class='line'>mkdir pg_tblspc pg_twophase pg_stat_tmp
-</span></code></pre></td></tr></table></div></figure>`</p>
+<code>bash
+cd /usr/local/var/postgres
+mkdir pg_tblspc pg_twophase pg_stat_tmp
+</code></p>
 ]]></content>
   </entry>
   
