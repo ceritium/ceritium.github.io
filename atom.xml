@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2015-08-06T00:16:59+02:00</updated>
+  <updated>2016-03-28T20:00:45+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DIY plotter CNC]]></title>
+    <link href="http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/"/>
+    <updated>2016-03-28T19:03:02+02:00</updated>
+    <id>http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc</id>
+    <content type="html"><![CDATA[<p>Como proyecto para el puente de semana santa empecé un plotter CNC de bajo
+coste, me basé en este
+<a href="http://www.instructables.com/id/Mini-CNC-Plotter-Arduino-Based/">instructable</a>.</p>
+
+<p>En el instructable ya viene casi todo detallado así que solo me queda daros
+algunos consejos y agrupar en un repo todo el código.</p>
+
+<p>El mini plotter usa dos lectores de CD o DVD, si no tenéis lo mejor es que los
+compréis de segunda mano, yo he conseguido dos por menos de 5 euros.</p>
+
+<p>En el tutorial explica como controlar los motores con arduino usando los chips <strong>L293D IC</strong>, pero para ahorrame cableado decidí usar una <a
+rel="nofollow"
+href="http://www.amazon.es/gp/product/B00PS0QPRY/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00PS0QPRY&linkCode=as2&tag=josegr-21">Motor
+shield</a><img
+src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00PS0QPRY"
+width="1" height="1" border="0" alt="" style="border:none !important; margin:0px
+!important;" /> que ya la tenía por casa, esta es compatible con la <a href="https://github.com/adafruit/Adafruit-Motor-Shield-library">Adafruit Motor
+Shield library</a>.</p>
+
+<p>Si usas la librería Adafruit Motor Shield tendrás que cambiar un poco el código
+que cargues a tu Arduino.</p>
+
+<p>Este lo saqué de un comentario del propio tutorial, aquí os lo dejo un poco más
+bonito.</p>
+
+<script src="https://gist.github.com/ceritium/04521b4eeb70a305fcc3.js"></script>
+
+
+<p>Para conectar los cables a los motores, creo que lo mejor es soldar directamente
+los cables en los 4 puntos que hay expuestos, no trate de quitar el plastiquito,
+así solo conseguiras cargartelo.</p>
+
+<p>Y este es el plotter funcionando, aún sin el servo para levantar el boligrafo.</p>
+
+<iframe width="100%" height="500px" src="https://www.youtube.com/embed/8Le7nVhrpY4" frameborder="0" allowfullscreen></iframe>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Postgres after upgrade to Yosemite]]></title>
@@ -109,7 +153,7 @@ actualizarlo&hellip;</p>
     <link href="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/"/>
     <updated>2015-05-28T01:28:42+02:00</updated>
     <id>http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz</id>
-    <content type="html"><![CDATA[<p>Para el proyecto de <a href="http://ceritium.github.io/2015/04/27/monitorizar-huerto-urbano-con-arduino/">monitorización de mi pequeño huerto
+    <content type="html"><![CDATA[<p>Para el proyecto de <a href="http://ceritium.github.io/blog/2015/05/28/arduino-modulo-rf-433mhz/">monitorización de mi pequeño huerto
 urbano</a> necesito
 comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos distintas
 opciones y dependiendo de las necesidades podremos usar un sistema u otro.</p>

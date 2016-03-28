@@ -5,12 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>fast_bundler - José Galisteo Ruiz</title>
+  <title>DIY plotter CNC - José Galisteo Ruiz</title>
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
-consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100 &hellip;">
+  <meta name="description" content="Como proyecto para el puente de semana santa empecé un plotter CNC de bajo
+coste, me basé en este
+instructable. En el instructable ya viene casi todo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@ consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ceritium.github.io/blog/2015/03/28/fast-bundler/">
+  <link rel="canonical" href="http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="José Galisteo Ruiz" type="application/atom+xml">
@@ -83,7 +84,7 @@ consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100
   
   <header>
     
-      <h1 class="entry-title">fast_bundler</h1>
+      <h1 class="entry-title">DIY plotter CNC</h1>
     
     
       <p class="meta">
@@ -92,7 +93,7 @@ consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100
 
 
 
-<time class='entry-date' datetime='2015-03-28T01:08:08+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:08 am</span></time>
+<time class='entry-date' datetime='2016-03-28T19:03:02+02:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>7:03 pm</span></time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://ceritium.github.io">Comments</a>
@@ -102,41 +103,41 @@ consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100
   </header>
 
 
-<div class="entry-content"><p>Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
-consecuencias es que tenemos más de 100 gemas en nuestro Gemfile.</p>
+<div class="entry-content"><p>Como proyecto para el puente de semana santa empecé un plotter CNC de bajo
+coste, me basé en este
+<a href="http://www.instructables.com/id/Mini-CNC-Plotter-Arduino-Based/">instructable</a>.</p>
 
-<p>Si tienes 100 gemas o menos <strong>Bundler</strong> consulta la API de Rubygems para
-calcular las dependencias pero si tienes más se descarga todo el indice, el cual
-es bastante pesado y dependiendo de tu conexión a Internet puede ser muy lento.</p>
+<p>En el instructable ya viene casi todo detallado así que solo me queda daros
+algunos consejos y agrupar en un repo todo el código.</p>
 
-<p>Para el día a día quizás no sea un gran beneficio, pero cuando estás
-actualizando las versión de Rails de un proyecto antiguo se agradece mucho.</p>
+<p>El mini plotter usa dos lectores de CD o DVD, si no tenéis lo mejor es que los
+compréis de segunda mano, yo he conseguido dos por menos de 5 euros.</p>
 
-<p>Comentándolo con compañeros de trabajo pensamos que sería buena idea probar si
-nos podíamos saltar ese límite y acabamos haciendo
-<a href="https://github.com/ceritium/fast_bundler">fast_bundler</a>.</p>
+<p>En el tutorial explica como controlar los motores con arduino usando los chips <strong>L293D IC</strong>, pero para ahorrame cableado decidí usar una <a
+rel="nofollow"
+href="http://www.amazon.es/gp/product/B00PS0QPRY/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00PS0QPRY&linkCode=as2&tag=josegr-21">Motor
+shield</a><img
+src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00PS0QPRY"
+width="1" height="1" border="0" alt="" style="border:none !important; margin:0px
+!important;" /> que ya la tenía por casa, esta es compatible con la <a href="https://github.com/adafruit/Adafruit-Motor-Shield-library">Adafruit Motor
+Shield library</a>.</p>
 
-<p><strong>fast_bundler</strong> actua como un proxy que envía todos los comandos a <strong>bundler</strong>
-pero redefine las constante <code>API_REQUEST_LIMIT</code>.</p>
+<p>Si usas la librería Adafruit Motor Shield tendrás que cambiar un poco el código
+que cargues a tu Arduino.</p>
 
-<p>La gema es totalmente experimental y no se que efectos puede tener en Rubygems
-pero hasta ahora no sabemos que haya problemas, de cualquier modo el limite lo
-podrían poner a nivel de API si lo considerasen oportuno.</p>
+<p>Este lo saqué de un comentario del propio tutorial, aquí os lo dejo un poco más
+bonito.</p>
 
-<p>Aunque yo empecé la gema casi todo el trabajo lo ha hecho <a href="https://github.com/mikz">Michal Cichra</a>.</p>
+<script src="https://gist.github.com/ceritium/04521b4eeb70a305fcc3.js"></script>
 
-<p>Para usarlo tan sencillo como <strong>bundler</strong>.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gem install fast_bundler
-</span><span class='line'>
-</span><span class='line'>$ fast_bundle
-</span><span class='line'>$ fast_bundle outdate
-</span><span class='line'>$ fast_bundle update rails</span></code></pre></td></tr></table></div></figure>
+<p>Para conectar los cables a los motores, creo que lo mejor es soldar directamente
+los cables en los 4 puntos que hay expuestos, no trate de quitar el plastiquito,
+así solo conseguiras cargartelo.</p>
+
+<p>Y este es el plotter funcionando, aún sin el servo para levantar el boligrafo.</p>
+
+<iframe width="100%" height="500px" src="https://www.youtube.com/embed/8Le7nVhrpY4" frameborder="0" allowfullscreen></iframe>
 
 </div>
 
@@ -153,12 +154,12 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
 
 
 
-<time class='entry-date' datetime='2015-03-28T01:08:08+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:08 am</span></time>
+<time class='entry-date' datetime='2016-03-28T19:03:02+02:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>7:03 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/arduino/'>arduino,</a>, <a class='category' href='/blog/categories/diy/'>diy</a>
   
 </span>
 
@@ -167,7 +168,7 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2015/03/28/fast-bundler/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2015/03/28/fast-bundler/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/" >Tweet</a>
   
   
   
@@ -176,10 +177,8 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/03/28/apidemic/" title="Previous Post: apidemic">&laquo; apidemic</a>
+        <a class="basic-alignment left" href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/" title="Previous Post: Postgres after upgrade to Yosemite">&laquo; Postgres after upgrade to Yosemite</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/03/28/ofuscar-bases-de-datos/" title="Next Post: Ofuscar bases de datos">Ofuscar bases de datos &raquo;</a>
       
     </p>
   </footer>
@@ -274,8 +273,8 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://ceritium.github.io/blog/2015/03/28/fast-bundler/';
-        var disqus_url = 'http://ceritium.github.io/blog/2015/03/28/fast-bundler/';
+        var disqus_identifier = 'http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/';
+        var disqus_url = 'http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/';
         var disqus_script = 'embed.js';
       
     (function () {

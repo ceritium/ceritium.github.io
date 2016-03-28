@@ -9,8 +9,9 @@
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="I recently upgraded to Yosemite after skip the reminder each day for the last
-year&hellip; Everything was fine, Mysql working, brew packages are OK, &hellip;">
+  <meta name="description" content="Como proyecto para el puente de semana santa empecé un plotter CNC de bajo
+coste, me basé en este
+instructable. En el instructable ya viene casi todo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,73 @@ year&hellip; Everything was fine, Mysql working, brew packages are OK, &hellip;"
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/28/diy-plotter-cnc/">DIY plotter CNC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-28T19:03:02+02:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>7:03 pm</span></time>
+        
+           | <a href="/blog/2016/03/28/diy-plotter-cnc/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2016/03/28/diy-plotter-cnc/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Como proyecto para el puente de semana santa empecé un plotter CNC de bajo
+coste, me basé en este
+<a href="http://www.instructables.com/id/Mini-CNC-Plotter-Arduino-Based/">instructable</a>.</p>
+
+<p>En el instructable ya viene casi todo detallado así que solo me queda daros
+algunos consejos y agrupar en un repo todo el código.</p>
+
+<p>El mini plotter usa dos lectores de CD o DVD, si no tenéis lo mejor es que los
+compréis de segunda mano, yo he conseguido dos por menos de 5 euros.</p>
+
+<p>En el tutorial explica como controlar los motores con arduino usando los chips <strong>L293D IC</strong>, pero para ahorrame cableado decidí usar una <a
+rel="nofollow"
+href="http://www.amazon.es/gp/product/B00PS0QPRY/ref=as_li_ss_tl?ie=UTF8&camp=3626&creative=24822&creativeASIN=B00PS0QPRY&linkCode=as2&tag=josegr-21">Motor
+shield</a><img
+src="http://ir-es.amazon-adsystem.com/e/ir?t=josegr-21&l=as2&o=30&a=B00PS0QPRY"
+width="1" height="1" border="0" alt="" style="border:none !important; margin:0px
+!important;" /> que ya la tenía por casa, esta es compatible con la <a href="https://github.com/adafruit/Adafruit-Motor-Shield-library">Adafruit Motor
+Shield library</a>.</p>
+
+<p>Si usas la librería Adafruit Motor Shield tendrás que cambiar un poco el código
+que cargues a tu Arduino.</p>
+
+<p>Este lo saqué de un comentario del propio tutorial, aquí os lo dejo un poco más
+bonito.</p>
+
+<script src="https://gist.github.com/ceritium/04521b4eeb70a305fcc3.js"></script>
+
+
+<p>Para conectar los cables a los motores, creo que lo mejor es soldar directamente
+los cables en los 4 puntos que hay expuestos, no trate de quitar el plastiquito,
+así solo conseguiras cargartelo.</p>
+
+<p>Y este es el plotter funcionando, aún sin el servo para levantar el boligrafo.</p>
+
+<iframe width="100%" height="500px" src="https://www.youtube.com/embed/8Le7nVhrpY4" frameborder="0" allowfullscreen></iframe>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -242,7 +310,7 @@ actualizarlo&hellip;</p>
   </header>
 
 
-  <div class="entry-content"><p>Para el proyecto de <a href="/2015/04/27/monitorizar-huerto-urbano-con-arduino/">monitorización de mi pequeño huerto
+  <div class="entry-content"><p>Para el proyecto de <a href="/blog/2015/05/28/arduino-modulo-rf-433mhz/">monitorización de mi pequeño huerto
 urbano</a> necesito
 comunicar dos módulos Arduino de forma inalámbrica, para eso tenemos distintas
 opciones y dependiendo de las necesidades podremos usar un sistema u otro.</p>
@@ -913,6 +981,10 @@ se creen tendrán un plan básico gratuito para siempre.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/28/diy-plotter-cnc/">DIY plotter CNC</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Postgres after upgrade to Yosemite</a>
       </li>
     
@@ -926,10 +998,6 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <li class="post">
         <a href="/blog/2015/04/27/monitorizar-huerto-urbano-con-arduino/">Monitorizar huerto urbano con Arduino</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/29/swagger-docs-swagger-ui-y-tests-de-integracion/">Swagger Docs, Swagger UI y tests de integración</a>
       </li>
     
   </ul>
@@ -974,7 +1042,7 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Jose Galisteo Ruiz -
+  Copyright &copy; 2016 - Jose Galisteo Ruiz -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
