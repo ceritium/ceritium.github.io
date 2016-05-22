@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ofuscar bases de datos - José Galisteo Ruiz</title>
+  <title>José Galisteo Ruiz</title>
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
-cuando necesitas una replica de la base de datos de producción para &hellip;">
+  <meta name="description" content="Durante las ultimas semanas he estado trabajando en Apidemic. Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
+los &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ cuando necesitas una replica de la base de datos de producción para &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/">
+  <link rel="canonical" href="http://ceritium.github.io/posts/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="José Galisteo Ruiz" type="application/atom+xml">
@@ -78,12 +78,15 @@ cuando necesitas una replica de la base de datos de producción para &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Ofuscar bases de datos</h1>
+      <h1 class="entry-title"><a href="/blog/2015/03/28/apidemic/">apidemic</a></h1>
     
     
       <p class="meta">
@@ -92,82 +95,55 @@ cuando necesitas una replica de la base de datos de producción para &hellip;">
 
 
 
-<time class='entry-date' datetime='2015-03-28T01:35:26+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 am</span></time>
+<time class='entry-date' datetime='2015-03-28T00:31:14+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:31 am</span></time>
         
-           | <a href="#disqus_thread"
-             data-disqus-identifier="http://ceritium.github.io">Comments</a>
+           | <a href="/blog/2015/03/28/apidemic/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/apidemic/">Comments</a>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
-cuando necesitas una replica de la base de datos de producción para poder hacer
-<em>debuggin</em> cómodamente en el entorno de desarrollo muchas veces lo mas eficiente es tener una COPIA de la base de datos, eso si ofuscada.</p>
+  <div class="entry-content"><p>Durante las ultimas semanas he estado trabajando en <a href="http://apidemic.co">Apidemic</a>.</p>
 
-<p>Para ello estuvimos probando durante un tiempo con un sencillo sistema basado en
-expresiones regulares, pero finalmente nos hemos decantado por
-<a href="https://github.com/mavenlink/my_obfuscate">my_obfuscate</a>.</p>
+<p><img src="/images/apidemic-entities.png" title="Apidemic screenshot" >
+<img src="/images/apidemic-entity-edit.png" title="Apidemic screenshot" ></p>
 
-<p>Entre esto y builds parametrizados de Jenkins podemos descargarnos toda la base
-de datos, solo ciertas tablas o datos específicos de alguna relación pero por
-supuesto ofuscada.</p>
+<p>Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
+los campos y los tipos de datos y lista para usar.</p>
+
+<p>De momento el registro está totalmente abierto y gratuito, todas las cuentas que
+se creen tendrán un plan básico gratuito para siempre.</p>
+
+<p>Características:</p>
+
+<ul>
+<li>Documentación swagger automática.</li>
+<li>API Rest en formato JSON.</li>
+<li>El listado permite paginación, filtro por cada campo y ordenación.</li>
+<li>Métodos para incrementar de forma atómica los campos numéricos.</li>
+<li>Gestión de keys en modo escritura o lectura.</li>
+<li>API interna.</li>
+</ul>
+
+
+<p><img src="/images/apidemic-swagger.png" title="Apidemic screenshot swagger" ></p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
+  
   
 
-<span class="byline author vcard">Posted by <span class="fn">Jose Galisteo Ruiz</span></span>
 
-      
-
-
-
-
-<time class='entry-date' datetime='2015-03-28T01:35:26+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 am</span></time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/programacion/'>programación</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/" >Tweet</a>
-  
-  
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2015/03/28/fast-bundler/" title="Previous Post: fast_bundler">&laquo; fast_bundler</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/03/28/tutum/" title="Next Post: Tutum">Tutum &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/index.html">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -233,7 +209,6 @@ supuesto ofuscada.</p>
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -248,10 +223,7 @@ supuesto ofuscada.</p>
       var disqus_shortname = 'ceritiumblog';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/';
-        var disqus_url = 'http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

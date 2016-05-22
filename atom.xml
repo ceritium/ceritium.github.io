@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2016-03-28T20:00:45+02:00</updated>
+  <updated>2016-05-22T18:51:49+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecord, find_each y uncached]]></title>
+    <link href="http://ceritium.github.io/blog/2016/05/22/activerecord-y-memoria/"/>
+    <updated>2016-05-22T18:24:56+02:00</updated>
+    <id>http://ceritium.github.io/blog/2016/05/22/activerecord-y-memoria</id>
+    <content type="html"><![CDATA[<p>Si tenemos que recorrer coleciones muy grandes de ActiveRecord deberíamos usar
+<code>find_each</code> o <code>find_in_batches</code>, hasta aquí ninguna novedad, pero el otro día me
+di cuenta de que mis workers de sidekiq consumían muchísima memoria, el problema
+es que AR cache los objetos que devuelve el <code>find_each</code>.</p>
+
+<p>La solución para evitar esto pasa por usar el método <a href="http://api.rubyonrails.org/classes/ActiveRecord/QueryCache/ClassMethods.html#method-i-uncached">uncached</a>.</p>
+
+<p>Ejemplo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">uncached</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">scope</span><span class="o">.</span><span class="n">find_each</span><span class="p">(</span><span class="ss">batch_size</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">tweet</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">gz</span><span class="o">.</span><span class="n">write</span> <span class="n">tweet</span><span class="o">.</span><span class="n">to_csv</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DIY plotter CNC]]></title>

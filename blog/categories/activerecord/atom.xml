@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: activerecord, | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/activerecord/atom.xml" rel="self"/>
+  <link href="http://ceritium.github.io/"/>
+  <updated>2016-05-22T18:51:49+02:00</updated>
+  <id>http://ceritium.github.io/</id>
+  <author>
+    <name><![CDATA[Jose Galisteo Ruiz]]></name>
+    <email><![CDATA[ceritium@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecord, find_each y uncached]]></title>
+    <link href="http://ceritium.github.io/blog/2016/05/22/activerecord-y-memoria/"/>
+    <updated>2016-05-22T18:24:56+02:00</updated>
+    <id>http://ceritium.github.io/blog/2016/05/22/activerecord-y-memoria</id>
+    <content type="html"><![CDATA[<p>Si tenemos que recorrer coleciones muy grandes de ActiveRecord deberíamos usar
+<code>find_each</code> o <code>find_in_batches</code>, hasta aquí ninguna novedad, pero el otro día me
+di cuenta de que mis workers de sidekiq consumían muchísima memoria, el problema
+es que AR cache los objetos que devuelve el <code>find_each</code>.</p>
+
+<p>La solución para evitar esto pasa por usar el método <a href="http://api.rubyonrails.org/classes/ActiveRecord/QueryCache/ClassMethods.html#method-i-uncached">uncached</a>.</p>
+
+<p>Ejemplo:</p>
+
+<pre><code class="ruby">ActiveRecord::Base.uncached do
+  scope.find_each(batch_size: 1000) do |tweet|
+    gz.write tweet.to_csv
+  end
+end
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>
