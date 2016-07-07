@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2016-05-22T18:51:49+02:00</updated>
+  <updated>2016-07-07T19:04:54+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Heroku y Memcached local]]></title>
+    <link href="http://ceritium.github.io/blog/2016/07/07/heroku-y-memcached-local/"/>
+    <updated>2016-07-07T15:41:59+02:00</updated>
+    <id>http://ceritium.github.io/blog/2016/07/07/heroku-y-memcached-local</id>
+    <content type="html"><![CDATA[<p>La única opción &ldquo;oficial&rdquo; para usar memcaché en Heroku es usar el addon
+Memcachier o algún otro servicio externo, lo cual está genial pero a veces no es
+lo mejor, todo dependerá de nuestra aplicación y la estrategia de <em>caching</em> que
+usemos.</p>
+
+<p>En mi caso quiero usar memcached para <em>cachear</em> partes de vistas basándome en el
+<code>updated_at</code> de los objetos, una estrategia super sencilla. Además en los listados
+puedo hacer desde 10 hasta cientos de peticiones a <em>Memcached</em> pues son caches de
+fragmentos anidados.</p>
+
+<p>El problema aquí está en la latencia, por poca que sea, multiplica eso por 100 o
+500 peticiones. Lo ideal para mi caso sería tener <em>Memcached</em> corriendo en la
+misma maquina que mi aplicación.</p>
+
+<h2>Como ejecutar Memcached local en Heroku dynos</h2>
+
+<p>Añade <code>https://github.com/Americastestkitchen/heroku-buildpack-apt</code> a tu app.
+Puedes hacerlo desde consola o la interfaz de <em>Heroku</em>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku buildpacks:add https://github.com/Americastestkitchen/heroku-buildpack-apt</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Crea un fichero <code>Aptfile</code> con los paquetes a instalar, en este caso solo
+Memcached.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Aptfile
+</span><span class='line'>
+</span><span class='line'>memcached</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cambia tu <code>Procfile</code> para que ejecute <code>memcached</code> y tu aplicación, en mi caso hice:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Procfile
+</span><span class='line'>web: memcached -m 64 & bundle exec puma -C config/puma.rb
+</span><span class='line'>
+</span><span class='line'># -m es la cantidad de ram</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Con esto cuando vuelvas a desplegar tendrás disponible <code>memcached</code> en cada
+<em>dyno</em> dedicado a web. Los parametros son los que vienen por defecto <code>127.0.0.1:11211</code>.</p>
+
+<h2>Cosas a tener en cuenta:</h2>
+
+<p><strong>La cantitdad de RAM disponible</strong></p>
+
+<p>Puedes usar
+<a href="https://devcenter.heroku.com/articles/log-runtime-metrics"><code>log-runtime-metrics</code></a> para
+monitorizarlo o las estadisticas que ofrece Heroku en el dashboard, pero estas
+solo están disponibles para aplicaciones que usan dynos a partir de
+<code>standar-1x</code>. Necesitas saber cuánta <em>RAM</em> consume tu app normalmente, cosa que
+puedes ver con NewRelic (gratis) y decidir que cantidad le dedicas a Memcached.</p>
+
+<p><strong>Una instance de memcached por instancia</strong></p>
+
+<p>Esto es lo que buscábamos al fin y al cabo, si quieres memcached para tus
+workers tendrás que hacer lo mismo que para web. Si tienes varios dynos
+corriendo cada uno tendrá su propia caché, por lo que tu aplicación debe estar
+preparada para ello. Si necesitas una sola instancía de Memcached entonces lo
+mejor es que uses un servicio externo.</p>
+
+<p><strong>Volatilidad</strong></p>
+
+<p>Cada vez que <em>despliegues</em> y posiblemente cada vez que hagas un <em>restart</em> perderás
+toda la caché. Por esta razón no es buena idea hacer lo mismo para Redis, a
+menos que uses Redis única y exclusivamente para caché.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ActiveRecord, find_each y uncached]]></title>

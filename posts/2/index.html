@@ -9,8 +9,8 @@
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Durante las ultimas semanas he estado trabajando en Apidemic. Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
-los &hellip;">
+  <meta name="description" content="Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
+consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +86,73 @@ los &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/03/28/fast-bundler/">fast_bundler</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-28T01:08:08+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:08 am</span></time>
+        
+           | <a href="/blog/2015/03/28/fast-bundler/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/fast-bundler/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
+consecuencias es que tenemos más de 100 gemas en nuestro Gemfile.</p>
+
+<p>Si tienes 100 gemas o menos <strong>Bundler</strong> consulta la API de Rubygems para
+calcular las dependencias pero si tienes más se descarga todo el indice, el cual
+es bastante pesado y dependiendo de tu conexión a Internet puede ser muy lento.</p>
+
+<p>Para el día a día quizás no sea un gran beneficio, pero cuando estás
+actualizando las versión de Rails de un proyecto antiguo se agradece mucho.</p>
+
+<p>Comentándolo con compañeros de trabajo pensamos que sería buena idea probar si
+nos podíamos saltar ese límite y acabamos haciendo
+<a href="https://github.com/ceritium/fast_bundler">fast_bundler</a>.</p>
+
+<p><strong>fast_bundler</strong> actua como un proxy que envía todos los comandos a <strong>bundler</strong>
+pero redefine las constante <code>API_REQUEST_LIMIT</code>.</p>
+
+<p>La gema es totalmente experimental y no se que efectos puede tener en Rubygems
+pero hasta ahora no sabemos que haya problemas, de cualquier modo el limite lo
+podrían poner a nivel de API si lo considerasen oportuno.</p>
+
+<p>Aunque yo empecé la gema casi todo el trabajo lo ha hecho <a href="https://github.com/mikz">Michal Cichra</a>.</p>
+
+<p>Para usarlo tan sencillo como <strong>bundler</strong>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gem install fast_bundler
+</span><span class='line'>
+</span><span class='line'>$ fast_bundle
+</span><span class='line'>$ fast_bundle outdate
+</span><span class='line'>$ fast_bundle update rails</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/03/28/apidemic/">apidemic</a></h1>
     
     
@@ -151,6 +218,10 @@ se creen tendrán un plan básico gratuito para siempre.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/07/heroku-y-memcached-local/">Heroku y Memcached local</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/05/22/activerecord-y-memoria/">ActiveRecord, find_each y uncached</a>
       </li>
     
@@ -164,10 +235,6 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <li class="post">
         <a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Instalar QT4 en Ubuntu 14.04</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/28/arduino-modulo-rf-433mhz/">Arduino modulo RF 433Mhz</a>
       </li>
     
   </ul>

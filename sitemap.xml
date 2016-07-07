@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://ceritium.github.io/blog/2016/07/07/heroku-y-memcached-local/</loc>
+    <lastmod>2016-07-07T15:41:59+02:00</lastmod>
+  </url>
+  <url>
     <loc>http://ceritium.github.io/blog/2016/05/22/activerecord-y-memoria/</loc>
     <lastmod>2016-05-22T18:24:56+02:00</lastmod>
   </url>
@@ -91,5 +95,8 @@
   </url>
   <url>
     <loc>http://ceritium.github.io/blog/categories/rails/</loc>
+  </url>
+  <url>
+    <loc>http://ceritium.github.io/blog/categories/heroku/</loc>
   </url>
 </urlset>
