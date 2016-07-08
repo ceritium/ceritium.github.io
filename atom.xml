@@ -4,7 +4,7 @@
   <title><![CDATA[José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2016-07-07T19:26:55+02:00</updated>
+  <updated>2016-07-08T18:47:27+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -78,7 +78,7 @@ solo están disponibles para aplicaciones que usan dynos a partir de
 <code>standar-1x</code>. Necesitas saber cuánta <em>RAM</em> consume tu app normalmente, cosa que
 puedes ver con NewRelic (gratis) y decidir que cantidad le dedicas a Memcached.</p>
 
-<p><strong>Una instance de memcached por instancia</strong></p>
+<p><strong>Una instancia de Memcached por dyno</strong></p>
 
 <p>Esto es lo que buscábamos al fin y al cabo, si quieres memcached para tus
 workers tendrás que hacer lo mismo que para web. Si tienes varios dynos
