@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>activerecord-preload_query - José Galisteo Ruiz</title>
+  <meta name="author" content="Jose Galisteo Ruiz">
+
+  
+  <meta name="description" content="Este post va sobre mi gema
+activerecord-preload_query
+y otras maneras de hacer lo mismo. Activerecord nos provee los métodos preload, eager_load e &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="José Galisteo Ruiz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-63575316-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">José Galisteo Ruiz</a></h1>
+  
+    <h2>¯\_(ツ)_/¯</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  
+    <li><a href="mailto:ceritium@gmail.com" rel="email" title="contact via email">ceritium@gmail.com</a></li>
+  
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="ceritium.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">activerecord-preload_query</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-04T22:55:41+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:55 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Este post va sobre mi gema
+<a href="https://github.com/ceritium/activerecord-preload_query">activerecord-preload_query</a>
+y otras maneras de hacer lo mismo.</p>
+
+<p>Activerecord nos provee los métodos <code>preload</code>, <code>eager_load</code> e <code>includes</code> para precargar
+relaciones y evitar hacer N+1 queries a la base de datos cuando queremos acceder
+a esta. También nos provee de <code>counter_cache</code>, el cual está muy bien, pero está
+muy imitado.</p>
+
+<p>Pero que pasa si tenemos algunos cálculos mas complicados? Imaginemos que
+tenemos el siguiente código:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Category</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:products</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:category</span><span class="p">,</span> <span class="ss">counter_cache</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Gracias a <code>counter_cache</code> podemos hacer algo así:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">category</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">p</span> <span class="n">category</span><span class="o">.</span><span class="n">products_count</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Y solo se hará una sola llamada.</p>
+
+<p>Pero y si queremos saber por alguna razón el stock total de cada categoría?
+Imaginemos que <code>Product</code> tiene el atributo <code>stock</code>.</p>
+
+<p>En la categoría podremos añadir un método <code>products_stock</code> como este:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">products_stock</span>
+</span><span class='line'>  <span class="n">products</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="ss">:stock</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>De esta manera, tendremos de nuevo el problema del N+1.</p>
+
+<h2>Solución con joins</h2>
+
+<p>Para evitarlo podríamos optar por algo como:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="vi">@categories</span> <span class="o">=</span> <span class="no">Category</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;*, sum(products.stock) as products_stock&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Esto soluciona el problema del N+1, pero estamos sobrescribiendo el <code>select</code>,
+entonces a <code>@categories</code> no podremos enviarle muchos métodos de activerecord
+porque no estarán disponibles los campos que el espera.</p>
+
+<p>Un ejemplo sencillo es con <code>@categories.count</code>
+y si en vez de ser <code>Category</code> lo que precede a <code>select</code> fuese un &ldquo;scope&rdquo; mucho más
+complicado como podría ser en el caso del <code>scope</code> producido por una búsqueda
+compleja seguramente acabaríamos rompiendo la <code>query</code>.</p>
+
+<p>Además que incluso con este sencillo caso, <code>@categories.count</code> acaba dando un
+error al no estar presentes los campos que se esperaban, porque hemos sobreescrito el
+<code>select</code>.</p>
+
+<p>Otro problema a tener en cuenta, pero no el principal es hacer <code>joins</code> de tablas
+muy grandes.</p>
+
+<h2>Consulta a parte</h2>
+
+<p>Para evitar los problemas de sobreescribir el <code>select</code>, lo mejor es hacer la consulta
+a parte, por ejemplo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">categories</span> <span class="o">=</span> <span class="no">Category</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">includes</span><span class="p">(</span><span class="ss">:foo</span><span class="p">,</span> <span class="ss">:bar</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">&#39;whatever = foo&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">products_stock</span> <span class="o">=</span> <span class="no">Category</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">categories</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:id</span><span class="p">))</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;*, sum(products.stock) as products_stock&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="o">[</span><span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">products_stock</span><span class="o">]</span><span class="p">}</span><span class="o">.</span><span class="n">to_h</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">categories</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">category</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">category</span><span class="o">.</span><span class="n">define_singleton_method</span> <span class="ss">:products_stock</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">products_stock</span><span class="o">[</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="o">]</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Con preload_query</h2>
+
+<p>Con <code>preload_query</code> es básicamente igual, pero interceptando el método de
+ActiveRecord que se encarga de hacer la consulta, así no llamaremos a la base de
+datos hasta el  momento en el que sea necesario.</p>
+
+<p>Ejemplo de uso básico:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Category</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:products</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">sum_price</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.price) AS sum_price&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:category</span><span class="p">,</span> <span class="ss">counter_cache</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_price</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_price</code>
+para cuando no se hace un preload.</p>
+
+<p>Por ejemplo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Category</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:products</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">preloaded_sum_price</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.price) AS preloaded_sum_price&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">sum_price</span>
+</span><span class='line'>    <span class="n">try</span><span class="p">(</span><span class="ss">:preloaded_sum_price</span><span class="p">)</span> <span class="o">||</span> <span class="n">products</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="ss">:price</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_price</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">sum_price</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Me gustaría pensar un DSL para implementar este último ejemplo de forma mas
+sencilla, pero de momento no se me ocurre :P</p>
+
+<h2>Gemas similares</h2>
+
+<p>Estas gemas hace algo parecido, pero solo se encargan de los <code>counts</code>, quizás
+para ti sea suficiente.</p>
+
+<ul>
+<li><a href="https://github.com/k0kubun/activerecord-precount">https://github.com/k0kubun/activerecord-precount</a></li>
+<li><a href="https://github.com/smathieu/preload_counts">https://github.com/smathieu/preload_counts</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jose Galisteo Ruiz</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-08-04T22:55:41+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:55 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/activerecord/'>activerecord</a>, <a class='category' href='/blog/categories/preload-query/'>preload_query</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/" data-via="ceritium" data-counturl="http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/07/07/heroku-y-memcached-local/" title="Previous Post: Heroku y Memcached local">&laquo; Heroku y Memcached local</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/04/activerecord-preload-query/">activerecord-preload_query</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/07/heroku-y-memcached-local/">Heroku y Memcached local</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/05/22/activerecord-y-memoria/">ActiveRecord, find_each y uncached</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/28/diy-plotter-cnc/">DIY plotter CNC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Postgres after upgrade to Yosemite</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/ceritium">@ceritium</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'ceritium',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Jose Galisteo Ruiz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ceritiumblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/';
+        var disqus_url = 'http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

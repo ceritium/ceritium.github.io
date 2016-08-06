@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2016-07-08T18:47:27+02:00</updated>
+  <updated>2016-08-06T12:38:54+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -12,6 +12,165 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[activerecord-preload_query]]></title>
+    <link href="http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query/"/>
+    <updated>2016-08-04T22:55:41+02:00</updated>
+    <id>http://ceritium.github.io/blog/2016/08/04/activerecord-preload-query</id>
+    <content type="html"><![CDATA[<p>Este post va sobre mi gema
+<a href="https://github.com/ceritium/activerecord-preload_query">activerecord-preload_query</a>
+y otras maneras de hacer lo mismo.</p>
+
+<p>Activerecord nos provee los métodos <code>preload</code>, <code>eager_load</code> e <code>includes</code> para precargar
+relaciones y evitar hacer N+1 queries a la base de datos cuando queremos acceder
+a esta. También nos provee de <code>counter_cache</code>, el cual está muy bien, pero está
+muy imitado.</p>
+
+<p>Pero que pasa si tenemos algunos cálculos mas complicados? Imaginemos que
+tenemos el siguiente código:</p>
+
+<pre><code class="ruby">
+class Category &lt; ActiveRecord::Base
+
+  has_many :products
+
+end
+
+class Product &lt; ActiveRecord::Base
+
+  belongs_to :category, counter_cache: true
+
+end
+</code></pre>
+
+<p>Gracias a <code>counter_cache</code> podemos hacer algo así:</p>
+
+<pre><code class="ruby">Category.all.each do |category|
+  p category.products_count
+end
+</code></pre>
+
+<p>Y solo se hará una sola llamada.</p>
+
+<p>Pero y si queremos saber por alguna razón el stock total de cada categoría?
+Imaginemos que <code>Product</code> tiene el atributo <code>stock</code>.</p>
+
+<p>En la categoría podremos añadir un método <code>products_stock</code> como este:</p>
+
+<pre><code class="ruby">
+def products_stock
+  products.sum(:stock)
+end
+</code></pre>
+
+<p>De esta manera, tendremos de nuevo el problema del N+1.</p>
+
+<h2>Solución con joins</h2>
+
+<p>Para evitarlo podríamos optar por algo como:</p>
+
+<pre><code class="ruby">  @categories = Category.select('*, sum(products.stock) as products_stock').joins(:products)
+</code></pre>
+
+<p>Esto soluciona el problema del N+1, pero estamos sobrescribiendo el <code>select</code>,
+entonces a <code>@categories</code> no podremos enviarle muchos métodos de activerecord
+porque no estarán disponibles los campos que el espera.</p>
+
+<p>Un ejemplo sencillo es con <code>@categories.count</code>
+y si en vez de ser <code>Category</code> lo que precede a <code>select</code> fuese un &ldquo;scope&rdquo; mucho más
+complicado como podría ser en el caso del <code>scope</code> producido por una búsqueda
+compleja seguramente acabaríamos rompiendo la <code>query</code>.</p>
+
+<p>Además que incluso con este sencillo caso, <code>@categories.count</code> acaba dando un
+error al no estar presentes los campos que se esperaban, porque hemos sobreescrito el
+<code>select</code>.</p>
+
+<p>Otro problema a tener en cuenta, pero no el principal es hacer <code>joins</code> de tablas
+muy grandes.</p>
+
+<h2>Consulta a parte</h2>
+
+<p>Para evitar los problemas de sobreescribir el <code>select</code>, lo mejor es hacer la consulta
+a parte, por ejemplo:</p>
+
+<pre><code class="ruby">categories = Category.limit(10).includes(:foo, :bar).where('whatever = foo')
+
+products_stock = Category.where(id: categories.map(&amp;:id)).select('*, sum(products.stock) as products_stock').joins(:products).map{|x| [x.id, x.products_stock]}.to_h
+
+categories.map do |category|
+  category.define_singleton_method :products_stock, lambda { products_stock[category.id] }
+end
+</code></pre>
+
+<h2>Con preload_query</h2>
+
+<p>Con <code>preload_query</code> es básicamente igual, pero interceptando el método de
+ActiveRecord que se encarga de hacer la consulta, así no llamaremos a la base de
+datos hasta el  momento en el que sea necesario.</p>
+
+<p>Ejemplo de uso básico:</p>
+
+<pre><code class="ruby">class Category &lt; ActiveRecord::Base
+
+  has_many :products
+
+  class &lt;&lt; self
+    def sum_price(ids)
+      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.price) AS sum_price")
+    end
+  end
+end
+
+class Product &lt; ActiveRecord::Base
+
+  belongs_to :category, counter_cache: true
+
+end
+
+Category.preload_query(:sum_price).map(&amp;:sum_price)
+</code></pre>
+
+<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_price</code>
+para cuando no se hace un preload.</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code class="ruby">class Category &lt; ActiveRecord::Base
+
+  has_many :products
+
+  class &lt;&lt; self
+    def preloaded_sum_price(ids)
+      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.price) AS preloaded_sum_price")
+    end
+  end
+
+  def sum_price
+    try(:preloaded_sum_price) || products.sum(:price)
+  end
+end
+
+Category.preload_query(:sum_price).map(&amp;:sum_price)
+Category.map(&amp;:sum_price)
+Category.last.sum_price
+</code></pre>
+
+<p>Me gustaría pensar un DSL para implementar este último ejemplo de forma mas
+sencilla, pero de momento no se me ocurre :P</p>
+
+<h2>Gemas similares</h2>
+
+<p>Estas gemas hace algo parecido, pero solo se encargan de los <code>counts</code>, quizás
+para ti sea suficiente.</p>
+
+<ul>
+<li><a href="https://github.com/k0kubun/activerecord-precount">https://github.com/k0kubun/activerecord-precount</a></li>
+<li><a href="https://github.com/smathieu/preload_counts">https://github.com/smathieu/preload_counts</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ActiveRecord, find_each y uncached]]></title>

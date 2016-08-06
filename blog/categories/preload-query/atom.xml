@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: activerecord | José Galisteo Ruiz]]></title>
-  <link href="http://ceritium.github.io/blog/categories/activerecord/atom.xml" rel="self"/>
+  <title><![CDATA[Category: preload_query | José Galisteo Ruiz]]></title>
+  <link href="http://ceritium.github.io/blog/categories/preload-query/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
   <updated>2016-08-06T12:38:54+02:00</updated>
   <id>http://ceritium.github.io/</id>

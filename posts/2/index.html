@@ -9,8 +9,8 @@
   <meta name="author" content="Jose Galisteo Ruiz">
 
   
-  <meta name="description" content="Estoy trabajando en un proyecto muy grande y muy antiguo. Una de las
-consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100 &hellip;">
+  <meta name="description" content="Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
+cuando necesitas una replica de la base de datos de producción para &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +86,48 @@ consecuencias es que tenemos más de 100 gemas en nuestro Gemfile. Si tienes 100
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/03/28/ofuscar-bases-de-datos/">Ofuscar bases de datos</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-28T01:35:26+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 am</span></time>
+        
+           | <a href="/blog/2015/03/28/ofuscar-bases-de-datos/#disqus_thread"
+             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/ofuscar-bases-de-datos/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Cuando trabajas con aplicaciones un poco complejas a nivel de modelo de datos o
+cuando necesitas una replica de la base de datos de producción para poder hacer
+<em>debuggin</em> cómodamente en el entorno de desarrollo muchas veces lo mas eficiente es tener una COPIA de la base de datos, eso si ofuscada.</p>
+
+<p>Para ello estuvimos probando durante un tiempo con un sencillo sistema basado en
+expresiones regulares, pero finalmente nos hemos decantado por
+<a href="https://github.com/mavenlink/my_obfuscate">my_obfuscate</a>.</p>
+
+<p>Entre esto y builds parametrizados de Jenkins podemos descargarnos toda la base
+de datos, solo ciertas tablas o datos específicos de alguna relación pero por
+supuesto ofuscada.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/03/28/fast-bundler/">fast_bundler</a></h1>
     
     
@@ -148,61 +190,6 @@ podrían poner a nivel de API si lo considerasen oportuno.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/28/apidemic/">apidemic</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-03-28T00:31:14+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:31 am</span></time>
-        
-           | <a href="/blog/2015/03/28/apidemic/#disqus_thread"
-             data-disqus-identifier="http://ceritium.github.io/blog/2015/03/28/apidemic/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Durante las ultimas semanas he estado trabajando en <a href="http://apidemic.co">Apidemic</a>.</p>
-
-<p><img src="/images/apidemic-entities.png" title="Apidemic screenshot" >
-<img src="/images/apidemic-entity-edit.png" title="Apidemic screenshot" ></p>
-
-<p>Apidemic permite crear APIs de datos a golpe de click. Defines las entidades con
-los campos y los tipos de datos y lista para usar.</p>
-
-<p>De momento el registro está totalmente abierto y gratuito, todas las cuentas que
-se creen tendrán un plan básico gratuito para siempre.</p>
-
-<p>Características:</p>
-
-<ul>
-<li>Documentación swagger automática.</li>
-<li>API Rest en formato JSON.</li>
-<li>El listado permite paginación, filtro por cada campo y ordenación.</li>
-<li>Métodos para incrementar de forma atómica los campos numéricos.</li>
-<li>Gestión de keys en modo escritura o lectura.</li>
-<li>API interna.</li>
-</ul>
-
-
-<p><img src="/images/apidemic-swagger.png" title="Apidemic screenshot swagger" ></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -218,6 +205,10 @@ se creen tendrán un plan básico gratuito para siempre.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/08/04/activerecord-preload-query/">activerecord-preload_query</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/07/heroku-y-memcached-local/">Heroku y Memcached local</a>
       </li>
     
@@ -231,10 +222,6 @@ se creen tendrán un plan básico gratuito para siempre.</p>
     
       <li class="post">
         <a href="/blog/2015/08/06/postgres-after-upgrade-to-yosemite/">Postgres after upgrade to Yosemite</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/29/instalar-qt4-en-ubuntu-14-dot-04/">Instalar QT4 en Ubuntu 14.04</a>
       </li>
     
   </ul>
