@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | José Galisteo Ruiz]]></title>
   <link href="http://ceritium.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://ceritium.github.io/"/>
-  <updated>2016-08-06T12:38:54+02:00</updated>
+  <updated>2016-08-06T12:44:41+02:00</updated>
   <id>http://ceritium.github.io/</id>
   <author>
     <name><![CDATA[Jose Galisteo Ruiz]]></name>
@@ -116,22 +116,16 @@ datos hasta el  momento en el que sea necesario.</p>
   has_many :products
 
   class &lt;&lt; self
-    def sum_price(ids)
-      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.price) AS sum_price")
+    def sum_stock(ids)
+      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.stock) AS sum_stock")
     end
   end
 end
 
-class Product &lt; ActiveRecord::Base
-
-  belongs_to :category, counter_cache: true
-
-end
-
-Category.preload_query(:sum_price).map(&amp;:sum_price)
+Category.preload_query(:sum_stock).map(&amp;:sum_stock)
 </code></pre>
 
-<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_price</code>
+<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_stock</code>
 para cuando no se hace un preload.</p>
 
 <p>Por ejemplo:</p>
@@ -141,19 +135,19 @@ para cuando no se hace un preload.</p>
   has_many :products
 
   class &lt;&lt; self
-    def preloaded_sum_price(ids)
-      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.price) AS preloaded_sum_price")
+    def preloaded_sum_stock(ids)
+      where(id: ids).group("categories.id").joins(:products).select("categories.id, sum(products.stock) AS preloaded_sum_stock")
     end
   end
 
-  def sum_price
-    try(:preloaded_sum_price) || products.sum(:price)
+  def sum_stock
+    try(:preloaded_sum_stock) || products.sum(:stock)
   end
 end
 
-Category.preload_query(:sum_price).map(&amp;:sum_price)
-Category.map(&amp;:sum_price)
-Category.last.sum_price
+Category.preload_query(:sum_stock).map(&amp;:sum_stock)
+Category.map(&amp;:sum_stock)
+Category.last.sum_stock
 </code></pre>
 
 <p>Me gustaría pensar un DSL para implementar este último ejemplo de forma mas

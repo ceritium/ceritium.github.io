@@ -236,34 +236,22 @@ datos hasta el  momento en el que sea necesario.</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Category</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="n">has_many</span> <span class="ss">:products</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">sum_price</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.price) AS sum_price&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">sum_stock</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.stock) AS sum_stock&quot;</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:category</span><span class="p">,</span> <span class="ss">counter_cache</span><span class="p">:</span> <span class="kp">true</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_price</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_stock</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_stock</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_price</code>
+<p>A la clase <code>Category</code> puede que nos interese implementarle el método <code>sum_stock</code>
 para cuando no se hace un preload.</p>
 
 <p>Por ejemplo:</p>
@@ -291,19 +279,19 @@ para cuando no se hace un preload.</p>
 </span><span class='line'>  <span class="n">has_many</span> <span class="ss">:products</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">preloaded_sum_price</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.price) AS preloaded_sum_price&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">preloaded_sum_stock</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">where</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;categories.id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:products</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;categories.id, sum(products.stock) AS preloaded_sum_stock&quot;</span><span class="p">)</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">sum_price</span>
-</span><span class='line'>    <span class="n">try</span><span class="p">(</span><span class="ss">:preloaded_sum_price</span><span class="p">)</span> <span class="o">||</span> <span class="n">products</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="ss">:price</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">sum_stock</span>
+</span><span class='line'>    <span class="n">try</span><span class="p">(</span><span class="ss">:preloaded_sum_stock</span><span class="p">)</span> <span class="o">||</span> <span class="n">products</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="ss">:stock</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
-</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_price</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
-</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_price</span><span class="p">)</span>
-</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">sum_price</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">preload_query</span><span class="p">(</span><span class="ss">:sum_stock</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_stock</span><span class="p">)</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:sum_stock</span><span class="p">)</span>
+</span><span class='line'><span class="no">Category</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">sum_stock</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
